@@ -24,6 +24,35 @@ app.get("/api/hello", function (req, res) {
   res.json({greeting: 'hello API'});
 });
 
+// Responds with the current UNIX and UTC timestamp
+app.get("/api/", (req, res) => {
+  const now = new Date();
+  
+  res.json({
+    unix: date.getTime(),
+    utc: date.toUTCString()
+  });
+});
+
+// Responds with parsed timestamp or error
+app.get("/api/:date", (req, res) => {
+  const input = req.params.date;
+
+  // For inputs that are only digits, treat as UNIX timestamp
+  const date = /^\d+$/.test(input)
+    ? new Date(parseInt(input)) // assumes ms
+    : new Date(input); // try to parse to str
+
+  if (isNaN(date.getTime())) {
+    return res.json({ error: 'Invalid Date' });
+  }
+
+  res.json({
+    unix: date.getTime(),
+    utc: date.toUTCString()
+  });
+});
+
 
 
 // Listen on port set in environment variable or default to 3000
