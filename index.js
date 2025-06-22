@@ -29,14 +29,19 @@ app.get("/api/", (req, res) => {
   const now = new Date();
   
   res.json({
-    unix: date.getTime(),
-    utc: date.toUTCString()
+    unix: now.getTime(),
+    utc: now.toUTCString()
   });
 });
 
 // Responds with parsed timestamp or error
 app.get("/api/:date", (req, res) => {
-  const input = req.params.date;
+  const now = new Date()
+  var input = req.params.date;
+
+  if (!input) {
+    input = now;
+  }
 
   // For inputs that are only digits, treat as UNIX timestamp
   const date = /^\d+$/.test(input)
